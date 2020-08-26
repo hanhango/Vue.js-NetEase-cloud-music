@@ -27,6 +27,7 @@ export default {
   },
   methods:{
     playMusic(i){
+      console.log('hanhan');
       // console.log(this.songsList);
        // 当前播放歌曲列表
       this.$store.dispatch("playMusicList", this.songsList);

@@ -23,14 +23,18 @@
                 <span>歌手:</span>
                 <p>{{currentSong.ar[0].name}}</p>
               </div>
-              <div class="lyric" v-if="lyrics.length>0">
+              <div @mousemove="mouseInLyric"
+                   @mouseleave="mouseOutLyric"
+                   class="lyric" 
+                   ref="ullyric"
+                   v-if="lyrics.length>0">
                 <!-- {{lyric}} -->
-                <ul ref="ullyric">
+                <ul class="han">
                   <li
                     v-for="(item,index) in lyrics"
                     :key="index"
-                    :class="{'active' :index<=lyrics.length-2  &&playerTiem >= lyrics[index].time && playerTiem <= lyrics[index+1].time}"
-                  >{{item.lyric}}{{scrollLRC(index)}}</li>
+                    :class="{'active': ifActive(index)}"
+                  >{{item.lyric}}{{ifScroll(index)}}</li>
                 </ul>
               </div>
               <div v-else class="name">
@@ -103,10 +107,19 @@ export default {
       lyrics: [], // 歌词
       simiPlaylists: [], // 获包含这首歌的相似歌单
       simiSongs: [], //相似歌曲
+      isScrollTo: true//是否可以滚动
     };
   },
   created() {},
   methods: {
+    //鼠标不可以滚动
+    mouseInLyric(){
+      this.isScrollTo = false
+    },
+    //鼠标可以滚动
+    mouseOutLyric(){
+      this.isScrollTo = true
+    },
     hide() {
       this.$store.state.searchShow = false;
       this.$store.state.miniPlayListShow = false;
@@ -159,10 +172,17 @@ export default {
     },
     // 歌词移动
     scrollLRC(index) {
-      // console.log(this.playerTiem <= this.lyrics[index].time);
-      if (this.playerTiem >= this.lyrics[index].time) {
+      if (index < 4 && index != 0)
+        return ;
+      if(index == 0){
+        this.$refs.ullyric.scrollTop = 122
+        console.log(this.$refs.ullyric.scrollTop);
+      }
+      if (this.isScrollTo) {
         this.$nextTick(() => {
-          this.$refs.ullyric.style.top = -((index - 3) * 40) + "px";
+          const HEIGHT = document.querySelector(".active").offsetTop || 39;
+          // this.$refs.ullyric.scrollTop = ((index - 4) * HEIGHT);
+          this.$refs.ullyric.scrollTop = HEIGHT - 112;
         });
       }
     },
@@ -171,7 +191,6 @@ export default {
       getSimiSongSheet(id).then((res) => {
         console.log(res);
         if (res.playlists.length == 0) return (this.simiPlaylists = []);
-
         this.simiPlaylists = res.playlists;
       });
     },
@@ -194,11 +213,9 @@ export default {
         if (res.songs.length == 0) return (this.simiSongs = []);
         let list = [];
         res.songs.map((i) => list.push(i.id));
-        // console.log(list);
         const str = list.join(",");
         getSongList(list).then((song) => {
           this.simiSongs = song.songs;
-          // console.log(this.simiSongs);
         });
       });
     },
@@ -206,7 +223,6 @@ export default {
     playMusic(i) {
       this.$store.state.searchShow = false;
       this.$store.state.miniPlayListShow = false;
-      // console.log(this.songsList);
       // 当前播放歌曲列表
       this.$store.dispatch("playMusicList", this.simiSongs);
       // 当前播放歌曲下标值
@@ -223,6 +239,44 @@ export default {
     // 当前歌曲歌词
     Lyric() {
       return this.$store.state.Lyric;
+    },
+    //获取正在活跃的歌词
+    ifActive(index) {
+      return function (index) {
+        let lyrics = this.lyrics;
+        let playerTiem = this.playerTiem;
+        if (
+          (index <= lyrics.length - 2 &&
+          playerTiem >= lyrics[index].time &&
+          playerTiem <= lyrics[index + 1].time) || 
+          (index == lyrics.length - 1 &&
+          playerTiem >= lyrics[index].time) || 
+          (index == 0 && playerTiem <= lyrics[0].time)
+        ) {
+          return true;
+        }
+        return false;
+      };
+    },
+    //判断是否需要滚动歌词
+    ifScroll(index) {
+      let oldIndex = 0;
+      return function (index) {
+        let lyrics = this.lyrics;
+        let playerTiem = this.playerTiem;
+        if (
+          (index + 1 < lyrics.length &&
+          playerTiem >= lyrics[index].time &&
+          playerTiem <= lyrics[index + 1].time) || 
+          (index + 1 == lyrics.length &&
+          playerTiem >= lyrics[index].time)
+        ) {
+          if (index != oldIndex) {
+            oldIndex = index;
+            this.scrollLRC(index);
+          }
+        }
+      };
     },
     // 当前歌曲内容
     currentSong() {
@@ -275,7 +329,6 @@ export default {
   0% {
     transform: rotate(0);
   }
-
   100% {
     transform: rotate(1turn);
   }
@@ -428,12 +481,17 @@ export default {
       }
     }
     .lyric {
-      // overflow: scroll;
-      overflow: hidden;
+      // overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: scroll;
       position: relative;
       margin-top: 20px;
       width: 100%;
       height: 472px;
+    }
+    .lyric::-webkit-scrollbar {
+      /*隐藏滚轮*/
+      display: none;
     }
     ul {
       width: 100%;

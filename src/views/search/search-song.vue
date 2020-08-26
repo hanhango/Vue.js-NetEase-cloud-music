@@ -7,7 +7,7 @@
       style="width: 100%"
       stripe
       :row-class-name="tableRowIndex"
-      @row-click="playMusic"
+      @row-dblclick="playMusic"
     >
       <el-table-column type="index" align="center" width="80"></el-table-column>
       <el-table-column prop="name" label="音乐标题"></el-table-column>
@@ -37,20 +37,29 @@ export default {
     },
 
     // 点击播放音乐
-    playMusic(row) {
+    async playMusic(row) {
       // console.log(row);
       const ids = [];
       this.searchSong.map((item) => {
         ids.push(item.id);
       });
-      getSongList(ids).then((res) => {
-        // 当前播放歌曲列表
-        this.$store.dispatch("playMusicList", res.songs);
-        // 当前播放歌曲下标值
-        this.$store.dispatch("playIndex", row.index);
-        // 播放歌曲
-        this.$store.dispatch("searchPlay");
-      });
+      //Promise
+      // getSongList(ids).then((res) => {
+      //   // 当前播放歌曲列表
+      //   this.$store.dispatch("playMusicList", res.songs);
+      //   // 当前播放歌曲下标值
+      //   this.$store.dispatch("playIndex", row.index);
+      //   // 播放歌曲
+      //   this.$store.dispatch("searchPlay");
+      // });
+      let res = await getSongList(ids);
+      console.log(res);
+      // 当前播放歌曲列表
+      this.$store.dispatch("playMusicList", res.songs);
+      //   // 当前播放歌曲下标值
+      this.$store.dispatch("playIndex", row.index);
+      //   // 播放歌曲
+      this.$store.dispatch("searchPlay");
     },
   },
   filters: {

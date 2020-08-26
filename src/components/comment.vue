@@ -1,44 +1,30 @@
 <template>
   <div class="comments">
-    <el-row class="row">
-      <el-col :span="23">
-        <div class="comment-title">
-          <h3 v-if="comments.length>0">{{title}}</h3>
-          <span v-if="total">一共{{total}}条</span>
-        </div>
-      </el-col>
-      <el-col :span="24" v-for="(item) in  comments" :key="item.time" class="col">
-        <el-col :span="span">
-          <!-- 用户头像 -->
+    <div class="comment-title">
+      <h3 v-if="comments.length>0">{{title}}</h3>
+      <span v-if="total">一共{{total}}条</span>
+    </div>
+    <div class="user-comment">
+      <div class="user-item" v-for="(item) in  comments" :key="item.time">
+        <div class="user-cut-1">
           <img v-lazy="item ? item.user.avatarUrl : ''" alt />
-        </el-col>
-        <el-col :span="21" class="user">
-          <div class="user-cut-1">
-            <!-- 用户昵称和评论信息 -->
-            <dt>{{item.user.nickname}}</dt>
-            <b>:</b>
-            <dd>{{item.content}}</dd>
+          <div class="name-time">
+            <p style="color: #a1a1a1">{{item.user.nickname}}</p>
+            <span style="color: #a1a1a1">{{item.time | dateFormat}}</span>
           </div>
-          <!-- 二级评论 -->
-          <div class="user-cut-2" v-for="c in item.beReplied" :key="c.user.id">
-            <!-- 二级评论 用户昵称和评论信息 -->
-            <dt>{{c.user.nickname}}</dt>
-            <b>:</b>
-            <dd>{{c.content}}</dd>
-          </div>
-          <div class="time">
-            <span>{{item.time | dateFormat}}</span>
-            <i class="icon iconfont icon-dianzan"> {{item.likedCount}}</i>
-          </div>
-        </el-col>
-      </el-col>
-    </el-row>
-    <div class="pagination" v-if="total">
-      <el-pagination
-        @current-change="handleCurrentChange"
-        layout="prev, pager, next"
-        :total="total/2"
-      ></el-pagination>
+          <i class="icon iconfont icon-dianzan"><span>{{item.likedCount}}</span></i>
+        </div>
+        <div class="content-info">
+          <!-- 评论信息 -->
+          <p>{{item.content}}</p>
+        </div>
+        <!-- 二级评论 -->
+        <div class="user-cut-2" v-for="c in item.beReplied" :key="c.user.id">
+          <p>{{c.user.nickname}}</p>
+          <b>:</b>
+          <span>{{c.content}}</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -61,11 +47,7 @@ export default {
     total: {
       type: Number,
       default: 0,
-    },
-    span: {
-      type: Number,
-      default: 1,
-    },
+    }
   },
   methods: {
     // 发射页数信息出去给父组件
@@ -115,83 +97,112 @@ export default {
   margin-left: 40px;
 }
 .comment-title {
-  margin: 10px 0;
+  margin-top: 40px;
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
   span {
     margin-left: 20px;
     font-size: 14px;
     font-weight: 600;
-    color: rgba(0, 0, 0, 0.6);
+    color: #696969;
   }
 }
-.col {
-  padding: 20px 0;
-  img {
-    width: 50px;
-    border-radius: 50%;
-  }
-}
-.user {
+.user-comment {
   display: flex;
   flex-direction: column;
-  padding-bottom: 20px;
-  border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
-}
-.user-cut-1 {
-  display: flex;
-  min-width: 20px;
-  font-size: 14px;
-  line-height: 24px;
-  font-weight: 600;
-  align-items: center;
-}
-dt {
-  color: #0c73c2;
-}
-b {
-  margin-left: 5px;
-}
-dd {
-  margin-left: 10px;
-  color: rgba(0, 0, 0, 0.5);
-}
-.user-cut-2 {
-  margin-top: 8px;
-  border-radius: 2px;
-  padding: 10px;
-  background-color: rgba(0, 0, 0, 0.1);
-  display: flex;
-  font-size: 14px;
-  // font-weight: bold;
-  align-items: center;
-  position: relative;
-}
-.user-cut-2::after {
-  content: "";
-  position: absolute;
-  border-radius: 2px;
-  top: -5px;
-  left: 5px;
-  width: 0;
-  height: 0;
-  border-right: 5px solid transparent;
-  border-left: 5px solid transparent;
-  border-bottom: 5px solid rgba(0, 0, 0, 0.1);
-}
-.time {
-  color: rgba(0, 0, 0, 0.4);
-  font-size: 14px;
-  margin-top: 15px;
-  font-weight: 600;
-  display: flex;
-  justify-content: space-between;
-  span {
-    // width:50px;
-    min-width: 50px;
+  .user-item {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 30px;
+    border-bottom: 1px dashed #ccc;
+    .user-cut-1 {
+      display: flex;
+      font-size: 14px;
+      height: 70px;
+      align-items: center;
+      img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+      }
+      .name-time {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        line-height: 25px;
+        margin-left: 20px;
+        p {
+          color: #0c73c2;
+          font-size: 14px;
+          letter-spacing: 2px;
+        }
+        span {
+          // color:  #a1a1a1;
+          font-size: 12px;
+        }
+      }
+      i {
+        width: 140px;
+        // color:  #a1a1a1;
+        span{
+          padding-left: 5px;
+          font-size: 12px;
+        }
+      }
+    }
+    .content-info {
+      width: 88%;
+      margin-left: 70px;
+      font-size: 14px;
+      color: #696969;
+      p {
+        line-height: 26px;
+      }
+    }
+    .user-cut-2 {
+      width: 88%;
+      margin-top: 10px;
+      margin-left: 70px;
+      border-radius: 2px;
+      padding: 10px;
+      background-color: rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: flex-start;
+      font-size: 14px;
+      align-items:flex-start;
+      position: relative;
+      p {
+        line-height: 25px;
+        min-width: 10px;
+        color: #0c73c2;
+        margin-left: 10px;
+      }
+      b {
+        line-height: 25px;
+        margin-left: 5px;
+      }
+      span {
+        flex: 1;
+        line-height: 25px;
+        margin-left: 5px;
+        color: #696969;
+      }
+      &::after {
+        content: "";
+        position: absolute;
+        border-radius: 2px;
+        top: -7px;
+        left: 10px;
+        width: 0;
+        height: 0;
+        border-right: 7px solid transparent;
+        border-left: 7px solid transparent;
+        border-bottom: 7px solid rgba(0, 0, 0, 0.1);
+      }
+    }
   }
 }
+
 .pagination {
   margin: 20px 0;
   width: 95%;

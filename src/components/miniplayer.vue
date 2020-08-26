@@ -167,12 +167,10 @@ export default {
   methods: {
     // 隐藏
     hide() {
-      // console.log("11");
       this.$store.state.searchShow = false;
       this.$store.state.miniPlayListShow = false;
     },
     playerShow() {
-      // console.log(this.$store.state.playShow);
       this.$store.dispatch("playerShow");
     },
     // 拖动进度条，改变当前时间，index是进度条改变时的回调函数的参数0-100之间，需要换算成实际时间
@@ -212,7 +210,6 @@ export default {
     // 当timeupdate事件大概每秒一次，用来更新音频流的当前播放时间
     // 当音频当前时间改变后，进度条也要改变
     onTimeupdate(res) {
-      // console.log("timeupdate");
       // console.log(res);
       this.audio.currentTime = res.target.currentTime;
       this.sliderTime = parseFloat(
@@ -352,7 +349,7 @@ export default {
         this.pause();
         this.audio.playing = false;
         this.$store.state.playing = false;
-      } else {
+      } else if(oldval == '/mv' && newval != '/mv'){
         this.play();
         this.audio.playing = true;
         this.$store.state.playing = true;

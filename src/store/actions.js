@@ -53,12 +53,11 @@ export default {
   // 获取播放歌曲数据
   playMusic(context) {
     playMusic(context.state.playMusicList[context.state.playIndex].id).then(res => {
-      // console.log(res);
+      console.log(res);
       context.commit('playSong', res.data[0])
       // console.log(context.state.playMusicList[context.state.playIndex].id);
       context.commit('playerid', context.state.playMusicList[context.state.playIndex].id)
     })
-
   },
   // 右侧播放
   miniPlayMusic(context) {
@@ -71,7 +70,8 @@ export default {
   searchPlay(context) {
     // console.log(context.state.playMusicList);
     playMusic(context.state.playMusicList[context.state.playIndex].id).then(res => {
-      // console.log(res);
+      console.log(res);
+      context.commit('playerid',res.data[0].id)
       context.commit('playSong', res.data[0])
     })
   },
