@@ -26,7 +26,7 @@
         :model="userFrom"
         :rules="userRules"
         ref="loginRuleForm"
-        label-width="60px"
+        label-width="70px"
         class="login-form"
       >
         <el-form-item label="账号" prop="phone">

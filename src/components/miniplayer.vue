@@ -96,7 +96,9 @@
         </div>
         <!-- 跳转到gitee -->
         <div class="gitee">
-          <a href="https://gitee.com/wujunshu/netease-cloud-music-improvement" target="_blank">
+          <!-- https://gitee.com/wujunshu/netease-cloud-music-improvement -->
+          <!-- <a href="javascript:void(0);" target="_blank"> -->
+          <a href="javascript:void(0);">
             <i class="icon iconfont icon-gitee-fill-round"></i>
           </a>
         </div>
@@ -271,11 +273,6 @@ export default {
     // 音量控制
     changeVolume(volume) {
       this.$refs.audio.volume = (volume * 0.01).toFixed(2);
-      if (this.audio.volume == 0) {
-        this.ss = false;
-      } else {
-        this.ss = true;
-      }
       this.volumeShow = true;
       // console.log((volume * 0.01).toFixed(2));
     },

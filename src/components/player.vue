@@ -33,7 +33,7 @@
                   <li
                     v-for="(item,index) in lyrics"
                     :key="index"
-                    :class="{'active': ifActive(index)}"
+                    :class="{'han-active': ifActive(index)}"
                   >{{item.lyric}}{{ifScroll(index)}}</li>
                 </ul>
               </div>
@@ -167,7 +167,6 @@ export default {
           mergeArr.push(obj);
         }
         this.lyrics = mergeArr;
-        // console.log(this.lyrics);
       });
     },
     // 歌词移动
@@ -175,14 +174,17 @@ export default {
       if (index < 4 && index != 0)
         return ;
       if(index == 0){
-        this.$refs.ullyric.scrollTop = 122
-        console.log(this.$refs.ullyric.scrollTop);
+        this.$nextTick(() => {
+            this.$refs.ullyric.scrollTop = 122
+        });
       }
       if (this.isScrollTo) {
         this.$nextTick(() => {
-          const HEIGHT = document.querySelector(".active").offsetTop || 39;
-          // this.$refs.ullyric.scrollTop = ((index - 4) * HEIGHT);
-          this.$refs.ullyric.scrollTop = HEIGHT - 112;
+          const HEIGHT = document.querySelector(".han-active").offsetTop || 39;
+          // const HEIGHT = document.querySelector(".han-active").offsetHeight || 39;
+          
+          // this.$refs.ullyric.scrollTop = ((index - 4) * HEIGHT + 112);
+          this.$refs.ullyric.scrollTop = HEIGHT - 196;
         });
       }
     },
@@ -319,7 +321,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.active {
+.han-active {
   color: #d33a31;
   font-size: 18px !important;
   font-weight: 600;
