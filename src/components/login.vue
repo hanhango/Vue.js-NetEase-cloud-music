@@ -37,7 +37,7 @@
         </el-form-item>
       </el-form>
 
-      <div slot="footer" class="dialog-footer">
+      <div class="dialog-footer">
         <el-button type="primary" @click="login">确 定</el-button>
       </div>
     </el-dialog>
@@ -110,6 +110,7 @@ export default {
     if (getLocalStorage("playMusicID") != "") {
       this.$store.dispatch("userID", getLocalStorage("playMusicID"));
       getUser(this.$store.state.userID.id).then((res) => {
+        console.log(userInfo);
         this.userShow = false;
         this.userInfo.image = res.profile.avatarUrl;
         this.userInfo.name = res.profile.nickname;
@@ -129,9 +130,10 @@ export default {
           this.$store.dispatch("userID", getLocalStorage("playMusicID"));
           getUser(res.account.id).then((res) => {
             this.userShow = false;
-            this.$set(this.userInfo, 'image', res.profile.avatarUrl);
-            this.$set(this.userInfo, 'name', res.profile.nickname);
-            console.log(this.userInfo);
+            // this.$set(this.userInfo, 'image', res.profile.avatarUrl);
+            // this.$set(this.userInfo, 'name', res.profile.nickname);
+            this.userInfo.image = res.profile.avatarUrl
+            this.userInfo.name = res.profile.nickname
           });
           return this.$message.success("登录成功");
         });
@@ -146,7 +148,10 @@ export default {
       })
         .then(() => {
           removeLogin("playMusicID");
-          this.userInfo = {};
+          this.userInfo = {
+            image: "",
+            name: "",
+          };
           this.$store.state.userID = {};
           this.$message({
             type: "success",

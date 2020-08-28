@@ -43,7 +43,7 @@ export default {
       })
       .catch(error => {
         Message({
-          message:  '暂无版权，即将为你播放下一首',
+          message: '暂无版权，即将为你播放下一首',
           type: 'error',
           duration: 3 * 1000
         })
@@ -53,10 +53,22 @@ export default {
   // 获取播放歌曲数据
   playMusic(context) {
     playMusic(context.state.playMusicList[context.state.playIndex].id).then(res => {
-      console.log(res);
-      context.commit('playSong', res.data[0])
-      // console.log(context.state.playMusicList[context.state.playIndex].id);
-      context.commit('playerid', context.state.playMusicList[context.state.playIndex].id)
+      // console.log(res);
+      // context.commit('playSong', res.data[0])
+      // // console.log(context.state.playMusicList[context.state.playIndex].id);
+      // context.commit('playerid', context.state.playMusicList[context.state.playIndex].id)
+      if(res.data[0].url){
+        context.commit('playerid', res.data[0].id)
+        context.commit('playSong', res.data[0])
+      }else {
+        console.log('Vip');
+        Message({
+          message: '暂无版权，即将为你播放下一首',
+          type: 'info',
+          duration: 3 * 1000
+        })
+        this.dispatch('increasePlayIndex')
+      }
     })
   },
   // 右侧播放
@@ -71,8 +83,18 @@ export default {
     // console.log(context.state.playMusicList);
     playMusic(context.state.playMusicList[context.state.playIndex].id).then(res => {
       console.log(res);
-      context.commit('playerid',res.data[0].id)
-      context.commit('playSong', res.data[0])
+      if(res.data[0].url){
+        context.commit('playerid', res.data[0].id)
+        context.commit('playSong', res.data[0])
+      }else {
+        Message({
+          message: '暂无版权，即将为你播放下一首',
+          type: 'info',
+          duration: 3 * 1000
+        })
+        console.log('Vip');
+        this.dispatch('increasePlayIndex')
+      }
     })
   },
   // 播放主界面显示与隐藏
