@@ -11,7 +11,7 @@
               src="@/assets/image/play-bar.png"
             />
             <div class="play-music" :class="this.$store.state.playing ? '': 'play-music-ani'">
-              <img class="pic" :src="currentSong.al.picUrl" />
+              <img class="pic" v-lazy="currentSong.al.picUrl" />
             </div>
           </div>
           <div class="right">
@@ -23,11 +23,13 @@
                 <span>歌手:</span>
                 <p>{{currentSong.ar[0].name}}</p>
               </div>
-              <div @mousemove="mouseInLyric"
-                   @mouseleave="mouseOutLyric"
-                   class="lyric" 
-                   ref="ullyric"
-                   v-if="lyrics.length>0">
+              <div
+                @mousemove="mouseInLyric"
+                @mouseleave="mouseOutLyric"
+                class="lyric"
+                ref="ullyric"
+                v-if="lyrics.length>0"
+              >
                 <!-- {{lyric}} -->
                 <ul class="han">
                   <li
@@ -47,7 +49,7 @@
         <div class="comment" v-if="total>0">
           <div class="comment-left">
             <hotComment :comments="hotComment" :span="2" :title="'精彩评论'" />
-            <hotComment :comments="comment" :total="total" :span="2" :title="'最新评论'" />
+            <hotComment @handleComments="_handleComments" :comments="comment" :total="total" :span="2" :title="'最新评论'" />
           </div>
           <div class="comment-right">
             <ul class="simi-playlists" v-if="simiPlaylists.length>0">
@@ -97,7 +99,14 @@ import {
   getSimiSongSheet,
   getSimiSongs,
 } from "../network/play";
-import { getSongList } from "../network/playlist";
+import {
+  getContentOfSongList,
+  getSongList,
+  SongListData,
+  SongData,
+  getSongSheetNewComment,
+  getHotComment,
+} from "../network/playlist";
 export default {
   data() {
     return {
@@ -107,18 +116,61 @@ export default {
       lyrics: [], // 歌词
       simiPlaylists: [], // 获包含这首歌的相似歌单
       simiSongs: [], //相似歌曲
-      isScrollTo: true//是否可以滚动
+      isScrollTo: true, //是否可以滚动
+      currIndex: 0,//当前歌词index
+      songListInfor: {
+        coverImgUrl: "", // 歌单图片
+        name: "", // 歌单标题
+        avatarUrl: "", // 歌单作者头像
+        nickname: "", // 歌单作者名字
+        createTime: "", // 歌单创建时间
+        tags: [], // 歌单标签
+        description: "", // 歌单描述
+      },
+      // 歌单的全部歌曲数据
+      songlist: {
+        trackIds:[], // 歌单所有id
+        tracks:[] // 歌单所有歌曲
+      }, 
+      activeTab: "list", // tabs默认选中项
+      commentInfo: {
+        comments: [], // 最新评论
+        total: 0, // 评论条目数
+        hotComments: [], // 热门评论
+      }, // 评论
+      offset: 0, // 获取评论偏移数
     };
   },
-  created() {},
+  created() {
+    // this._handleComments();
+  },
   methods: {
+     // 评论信息
+    async _handleComments(newPage) {
+      if (newPage == 1 || newPage == undefined) {
+        this.offset = 0;
+      } else {
+        this.offset = 20 * (newPage - 1);
+      }
+      const { comments, total, hotComments } = await getMusicComment(
+        this.playerid,
+        this.offset
+      );
+      this.comment = comments
+      this.total = total
+      this.hotComments = hotComments
+      console.log('切换评论....',this.comment);
+    },
     //鼠标不可以滚动
-    mouseInLyric(){
-      this.isScrollTo = false
+    mouseInLyric() {
+      this.isScrollTo = false;
     },
     //鼠标可以滚动
-    mouseOutLyric(){
-      this.isScrollTo = true
+    mouseOutLyric() {
+      this.isScrollTo = true;
+      let TemSetTime = setTimeout(() => {
+        this.scrollLRC(this.currIndex);
+      },500);
     },
     hide() {
       this.$store.state.searchShow = false;
@@ -126,7 +178,7 @@ export default {
     },
     // 获取评论
     _getMusicComment(id) {
-      getMusicComment(id).then((res) => {
+      getMusicComment(id,0).then((res) => {
         this.hotComment = res.hotComments;
         this.comment = res.comments;
         this.total = res.total;
@@ -135,54 +187,57 @@ export default {
     // 获取歌词
     _getLyric(id) {
       getLyric(id).then((res) => {
-        let RegExp = /\[(\d*:\d*\.\d*)\]/;
-        let arr = [],
-          timeArr = [],
-          lyricArr = [],
-          mergeArr = [];
+        if (res.lrc) {
+          let RegExp = /\[(\d*:\d*\.\d*)\]/;
+          let arr = [],
+            timeArr = [],
+            lyricArr = [],
+            mergeArr = [];
 
-        /**将歌词转换成数组 */
-        arr = res.lrc.lyric.split("\n");
+          /**将歌词转换成数组 */
+          arr = res.lrc.lyric.split("\n");
 
-        for (let i of arr) {
-          /**获取歌词 */
-          let lrc = i.split("]")[1];
-          if (lrc == "" || lrc == undefined) continue;
-          lyricArr.push(lrc);
+          for (let i of arr) {
+            /**获取歌词 */
+            let lrc = i.split("]")[1];
+            if (lrc == "" || lrc == undefined) continue;
+            lyricArr.push(lrc);
 
-          /**处理时间 */
-          let resTime = RegExp.exec(i)[1];
-          let resTime2 = resTime.split(":");
-          let min = parseInt(resTime2[0]) * 60;
-          let sec = parseFloat(resTime2[1]);
-          let time = parseFloat(Number(min + sec).toFixed(2)); //toFixed返回值是String
-          timeArr.push(time);
+            /**处理时间 */
+            let resTime = RegExp.exec(i)[1];
+            let resTime2 = resTime.split(":");
+            let min = parseInt(resTime2[0]) * 60;
+            let sec = parseFloat(resTime2[1]);
+            let time = parseFloat(Number(min + sec).toFixed(2)); //toFixed返回值是String
+            timeArr.push(time);
+          }
+
+          for (let i = 0, length = timeArr.length; i < length; i++) {
+            let obj = {
+              time: timeArr[i],
+              lyric: lyricArr[i],
+            };
+            mergeArr.push(obj);
+          }
+          this.lyrics = mergeArr;
+        }else {
+          this.lyrics = []
         }
-
-        for (let i = 0, length = timeArr.length; i < length; i++) {
-          let obj = {
-            time: timeArr[i],
-            lyric: lyricArr[i],
-          };
-          mergeArr.push(obj);
-        }
-        this.lyrics = mergeArr;
       });
     },
     // 歌词移动
     scrollLRC(index) {
-      if (index < 4 && index != 0)
-        return ;
-      if(index == 0){
-        this.$nextTick(() => {
-            this.$refs.ullyric.scrollTop = 122
-        });
-      }
+      // if (index < 4 && index != 0) return;
+      // if (index == 0) {
+      //   this.$nextTick(() => {
+      //     this.$refs.ullyric.scrollTop = 122;
+      //   });
+      // }
       if (this.isScrollTo) {
         this.$nextTick(() => {
           const HEIGHT = document.querySelector(".han-active").offsetTop || 39;
           // const HEIGHT = document.querySelector(".han-active").offsetHeight || 39;
-          
+
           // this.$refs.ullyric.scrollTop = ((index - 4) * HEIGHT + 112);
           this.$refs.ullyric.scrollTop = HEIGHT - 196;
         });
@@ -242,6 +297,10 @@ export default {
     Lyric() {
       return this.$store.state.Lyric;
     },
+    // 传过来的歌单id值
+    songSheetid() {
+      return this.$route.query.id;
+    },
     //获取正在活跃的歌词
     ifActive(index) {
       return function (index) {
@@ -249,10 +308,9 @@ export default {
         let playerTiem = this.playerTiem;
         if (
           (index <= lyrics.length - 2 &&
-          playerTiem >= lyrics[index].time &&
-          playerTiem <= lyrics[index + 1].time) || 
-          (index == lyrics.length - 1 &&
-          playerTiem >= lyrics[index].time) || 
+            playerTiem >= lyrics[index].time &&
+            playerTiem <= lyrics[index + 1].time) ||
+          (index == lyrics.length - 1 && playerTiem >= lyrics[index].time) ||
           (index == 0 && playerTiem <= lyrics[0].time)
         ) {
           return true;
@@ -268,13 +326,13 @@ export default {
         let playerTiem = this.playerTiem;
         if (
           (index + 1 < lyrics.length &&
-          playerTiem >= lyrics[index].time &&
-          playerTiem <= lyrics[index + 1].time) || 
-          (index + 1 == lyrics.length &&
-          playerTiem >= lyrics[index].time)
+            playerTiem >= lyrics[index].time &&
+            playerTiem <= lyrics[index + 1].time) ||
+          (index + 1 == lyrics.length && playerTiem >= lyrics[index].time)
         ) {
           if (index != oldIndex) {
             oldIndex = index;
+            this.currIndex = index;
             this.scrollLRC(index);
           }
         }

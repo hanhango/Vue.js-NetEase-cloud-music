@@ -4,7 +4,7 @@
       <layoutHeader />
     </div>
     <div class="center" @click="hide">
-      <div class="aside">
+      <div :class="[$route.path == '/mv'?'mv-show':'','aside']">
         <layoutMenu />
       </div>
       <div class="mian" @click="hide">
@@ -59,6 +59,9 @@ export default {
     overflow-y: auto;
     overflow-x: hidden;
     background-color: #EDEDED;
+  }
+  .mv-show{
+    background-color: #fff !important;
   }
   .mian {
     flex: 1;

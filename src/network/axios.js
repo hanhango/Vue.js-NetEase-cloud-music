@@ -4,7 +4,7 @@ import {
   Loading
 } from 'element-ui'
 // 默认请求baseurl
-const ConfigBaseURL = 'http://localhost:3000'
+const ConfigBaseURL = "http://106.52.167.85:3000/";
 let loadingInstance = null //这里是loading
 //使用create方法创建axios实例
 export const Service = axios.create({
@@ -18,7 +18,7 @@ export const Service = axios.create({
 // 添加请求拦截器
 Service.interceptors.request.use(config => {
   loadingInstance = Loading.service({
-    lock: true,
+    lock: false,
     text: "拼命加载中",
     spinner: "el-icon-loading"
   })

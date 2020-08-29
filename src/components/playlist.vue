@@ -7,7 +7,9 @@
           <songList :songlist="songlist" />
         </el-tab-pane>
         <el-tab-pane :label="'评论('+(commentInfo.total)+')'" name="comment">
-          <comment :title="'精彩评论'" :comments="commentInfo.hotComments" />
+          <comment :title="'精彩评论'" 
+                   :comments="commentInfo.hotComments"
+                   @handleComments="_handleComments" />
           <comment
             :title="'最新评论'"
             :comments="commentInfo.comments"
@@ -67,6 +69,7 @@ export default {
   methods: {
     // 评论信息
     async _handleComments(newPage) {
+      console.log('来了....',newPage);
       if (newPage == 1 || newPage == undefined) {
         this.offset = 0;
       } else {

@@ -25,9 +25,9 @@ export function getLyric(id) {
   })
 }
 // 歌曲评论
-export function getMusicComment(id, offset) {
+export function getMusicComment(id, offset = 0) {
   return Service({
-    url: `/comment/music?id=${id}&limit=30&offset${offset}`,
+    url: `/comment/music?id=${id}&offset=${offset}&limit=30`,
     method: 'get'
   })
 }

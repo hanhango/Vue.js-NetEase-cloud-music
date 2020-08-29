@@ -4,7 +4,7 @@
     <div class="rec--songs-list">
       <div class="rec--songs-list-item" v-for="(item,index) in songsList" :key="item.id" @click="playMusic(index)">
         <span>{{index+1 | indexSort}}</span>
-        <img :src="item.al.picUrl" />
+        <img v-lazy="item.al.picUrl" />
         <div class="rec--songs-list-item-name">
           <dt>{{item.al.name}}</dt>
           <dd>{{item.ar[0].name}}</dd>

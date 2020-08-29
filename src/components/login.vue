@@ -8,7 +8,7 @@
     <!-- 登录后 -->
     <div v-else @click="logOut" class="logOut">
       <div class="user-nane">
-        <img :src="userInfo.image" />
+        <img v-lazy="userInfo.image" />
         <h1>{{userInfo.name}}</h1>
       </div>
       <!-- <user :uid="userId" /> -->
@@ -110,7 +110,7 @@ export default {
     if (getLocalStorage("playMusicID") != "") {
       this.$store.dispatch("userID", getLocalStorage("playMusicID"));
       getUser(this.$store.state.userID.id).then((res) => {
-        console.log(userInfo);
+        console.log(this.userInfo);
         this.userShow = false;
         this.userInfo.image = res.profile.avatarUrl;
         this.userInfo.name = res.profile.nickname;

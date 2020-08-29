@@ -4,7 +4,7 @@
       <h2>MV详情</h2>
       <video class="video-src" :src="mvUrl" width="760" height="430" controls autoplay></video>
       <div class="artistName">
-        <img :src="mvdata.cover" alt />
+        <img v-lazy="mvdata.cover" alt />
         <p>{{mvdata.artistName}}</p>
       </div>
       <p class="video-name">{{mvdata.name}}</p>
@@ -22,7 +22,7 @@
       <ul class="simi-mv-item">
         <li v-for="item in simiMv" :key="item.id" @click="getMv(item.id)">
           <div class="simi-img">
-            <img :src="item.cover" />
+            <img v-lazy="item.cover" />
             <span class="simi-playCount">
               <i class="el-icon-caret-right">{{item.playCount |formatNumber}}</i>
             </span>

@@ -9,7 +9,7 @@
 
       <div class="cover">
         <div class="toplist-content">
-          <img :src="item.tracks[0].al.picUrl" alt />
+          <img v-lazy="item.tracks[0].al.picUrl" alt />
           <div class="top-song">
             <div
               class="toplist-name-description-index"

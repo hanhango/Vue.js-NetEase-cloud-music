@@ -6,7 +6,7 @@
     ></div>
     <!-- 精品歌单 -->
     <div class="highquality-content" @click="getSongListData">
-      <img :src="highquality[0].coverImgUrl" />
+      <img v-lazy="highquality[0].coverImgUrl" />
       <div class="highquality-name-description">
         <div>精品歌单</div>
         <p class="highquality-name">{{highquality[0].name}}</p>

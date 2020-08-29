@@ -8,7 +8,9 @@ import './assets/icon/iconfont.css'
 import "./assets/style/base.css";
 import "./assets/style/normalize.css";
 
-Vue.use(VueLazyload)
+Vue.use(VueLazyload,{
+  loading: require('../src/assets/image/lazy.png')
+})
 
 Vue.config.productionTip = false
 router.beforeEach((to, from, next) => {

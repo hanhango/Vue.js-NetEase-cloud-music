@@ -279,6 +279,9 @@ export default {
     }
 
     li {
+      // white-space: nowrap;
+      // text-overflow: ellipsis;
+      // overflow: hidden;
       cursor: pointer;
       padding-left: 40px;
       font-size: 15px;
@@ -289,6 +292,10 @@ export default {
       display: flex;
       align-items: flex-end;
       dt {
+        width: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         font-size: 17px;
         color: rgba(0, 0, 0, 0.6);
         margin-right: 10px;

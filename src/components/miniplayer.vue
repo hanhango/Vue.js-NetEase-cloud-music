@@ -25,7 +25,7 @@
           <!-- 图片 -->
           <!-- {{this.state.playSong[this.state.playIndex]}} -->
           <div class="image" @click.stop="playerShow">
-            <img :src="currentSong.al.picUrl" />
+            <img v-lazy="currentSong.al.picUrl" />
             <i class="el-icon-d-arrow-left arrow-left"></i>
             <i class="el-icon-d-arrow-right arrow-right"></i>
           </div>
@@ -99,7 +99,7 @@
           <!-- https://gitee.com/wujunshu/netease-cloud-music-improvement -->
           <!-- <a href="javascript:void(0);" target="_blank"> -->
           <a href="javascript:void(0);">
-            <i class="icon iconfont icon-gitee-fill-round"></i>
+            <i class="icon iconfont icon-github"></i>
           </a>
         </div>
       </div>
@@ -563,7 +563,7 @@ export default {
   width: 35px;
   margin: 8px 40px 0 0px;
   i {
-    font-size: 30px;
+    font-size: 32px;
     color: #c71d24;
   }
 }

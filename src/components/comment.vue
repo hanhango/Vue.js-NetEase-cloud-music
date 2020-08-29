@@ -12,7 +12,9 @@
             <p style="color: #a1a1a1">{{item.user.nickname}}</p>
             <span style="color: #a1a1a1">{{item.time | dateFormat}}</span>
           </div>
-          <i class="icon iconfont icon-dianzan"><span>{{item.likedCount}}</span></i>
+          <i class="icon iconfont icon-dianzan">
+            <span>{{item.likedCount}}</span>
+          </i>
         </div>
         <div class="content-info">
           <!-- 评论信息 -->
@@ -26,12 +28,29 @@
         </div>
       </div>
     </div>
+    <div class="pagination" v-if="total">
+      <el-pagination
+        @current-change="handleCurrentChange"
+        layout="prev, pager, next"
+        :current-page="currPage"
+        :total="total/2"
+      ></el-pagination>
+    </div>
   </div>
 </template>
 
 <script>
+import pagination from "./pagination";
 export default {
   name: "Comment",
+  components: {
+    pagination,
+  },
+  data(){
+    return{
+      currPage: 1,
+    }
+  },
   props: {
     // 接受歌单数据
     comments: {
@@ -47,14 +66,24 @@ export default {
     total: {
       type: Number,
       default: 0,
-    }
+    },
   },
   methods: {
     // 发射页数信息出去给父组件
     handleCurrentChange(newPage) {
-      // console.log(newPage);
+      this.currPage = newPage
       this.$emit("handleComments", newPage);
     },
+  },
+  computed: {
+    playId(){
+      return this.$store.state.playerid
+    }
+  },
+  watch: {
+    playId(newVal){
+      this.currPage = 1
+    }
   },
   filters: {
     // 时间戳转换
@@ -144,7 +173,7 @@ export default {
       i {
         width: 140px;
         // color:  #a1a1a1;
-        span{
+        span {
           padding-left: 5px;
           font-size: 12px;
         }
@@ -169,7 +198,7 @@ export default {
       display: flex;
       justify-content: flex-start;
       font-size: 14px;
-      align-items:flex-start;
+      align-items: flex-start;
       position: relative;
       p {
         line-height: 25px;

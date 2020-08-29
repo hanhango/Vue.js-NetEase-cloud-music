@@ -7,7 +7,7 @@
           <div class="song-name">
             <img v-lazy="scope.row.al.picUrl" class="pic" />
             <span>{{ scope.row.name }}</span>
-            <i v-if="scope.row.mv" class="icon iconfont icon-shipin mv"></i>
+            <i v-if="scope.row.mv" @click.stop="toMv(scope)" class="icon iconfont icon-shipin mv"></i>
             <i @click.stop="playMusic(scope)" class="el-icon-caret-right play"></i>
           </div>
         </template>
@@ -43,6 +43,15 @@ export default {
       // 播放歌曲
       // this.$store.dispatch("checkPlayMusic");
       this.$store.dispatch("playMusic");
+    },
+    //去到mv页面
+    toMv(scope){
+      this.$router.push({
+        path: "mv",
+        query: {
+          id: scope.row.mv
+        },
+      });
     },
   },
   filters: {

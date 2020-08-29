@@ -1,12 +1,12 @@
 <template>
   <div class="songListInfor">
     <div class="songListInfor-img">
-      <img :src="songListInfor.coverImgUrl" />
+      <img v-lazy="songListInfor.coverImgUrl" />
     </div>
     <div class="songListInfor-content">
       <p class="songListInfor-name">{{songListInfor.name}}</p>
       <div class="songListInfor-author">
-        <img :src="songListInfor.avatarUrl" />
+        <img v-lazy="songListInfor.avatarUrl" />
         <p>{{songListInfor.nickname}}</p>
         <span>{{songListInfor.createTime | dateFormat}}创建</span>
       </div>
