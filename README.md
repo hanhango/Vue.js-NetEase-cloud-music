@@ -15,27 +15,46 @@
 - screenfull(全屏显示功能)
 
 ### 项目结构
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200829215746788.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyMzc2MjA0,size_16,color_FFFFFF,t_70#pic_center)
 
-![输入图片说明](https://gitee.com/wujunshu/netease-cloud-music-improvement/raw/master/src/assets/%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84.png)
+
+### 项目截图
+未登录首页
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200829215340812.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyMzc2MjA0,size_16,color_FFFFFF,t_70#pic_center)
+
+
+已登录首页
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200829215314911.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyMzc2MjA0,size_16,color_FFFFFF,t_70#pic_center)
+
+推荐歌单页面
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200829215647969.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyMzc2MjA0,size_16,color_FFFFFF,t_70#pic_center)
+
+搜索界面：
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200829215906411.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyMzc2MjA0,size_16,color_FFFFFF,t_70#pic_center)
+
+播放界面：
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200829215424782.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyMzc2MjA0,size_16,color_FFFFFF,t_70#pic_center)
+
+mv界面：
+![在这里插入图片描述](https://img-blog.csdnimg.cn/202008292155555.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyMzc2MjA0,size_16,color_FFFFFF,t_70#pic_center)
+
+mv播放界面
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200829215508467.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyMzc2MjA0,size_16,color_FFFFFF,t_70#pic_center)
+
+
+
+
+### 实现功能
+
+- 实现搜索歌曲,点击歌曲上一首/下一首
+
+- 
+
 
 ### 问题 
 
-#### 问题1：切换歌单视图没更新
-
-​	原因：已经在create中请求了数据只会触发一次
-
-​	解决方法： 使用watch监听路由传递过来的id值，如果发生变化就重新获取数据
-
-```javascript
-songid(newval, oldval) {
-    if (newval != oldval) {
-        this._getContentOfSongList(newval);
-        this._handleComments();
-    }
-},
-```
-
-#### 问题2：点击热门搜索会使列表关闭
+#### 问题1：点击热门搜索会使列表关闭
 
 ​	原因：事件冒泡了
 
@@ -49,11 +68,11 @@ songid(newval, oldval) {
 
 #### 问题4：没版权的歌曲不会播放也不会跳转下一首(X)
 
-​	待解决中
+​	已解决
 
 #### 问题5：进度条拉都最后面没歌词会报错(X)
 
-​	待解决中
+​	已解决
 
 ### screenfull 插件使用方法
 
@@ -79,12 +98,6 @@ songid(newval, oldval) {
 ​	1.完善歌词滚动效果//已实现
 
 ​	2.无版权歌曲跳过
-
-​	3.歌单收藏与新建
-
-​	4.增加喜欢歌曲功能
-
-​	5.增加歌手详细页
 
 ​	6.使用混入mixin优化重复性代码
 
