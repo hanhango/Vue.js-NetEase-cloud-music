@@ -20,6 +20,7 @@ Service.interceptors.request.use(config => {
   loadingInstance = Loading.service({
     lock: false,
     text: "拼命加载中",
+    background: "transparent",
     spinner: "el-icon-loading"
   })
   return config
