@@ -60,7 +60,7 @@ export function getLocalStorage(key) {
   const time = new Date().getTime() - dataObj.time
   // 取出的时候如果时间超过7天，清空
   if (time > 604800000) {
-    storage.clear(dataObj)
+    localStorage.clear(dataObj)
     return console.log("信息已过期");
   } else {
     return dataObj

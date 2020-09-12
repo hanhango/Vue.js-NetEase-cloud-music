@@ -96,7 +96,6 @@
         </div>
         <!-- 跳转到gitee -->
         <div class="gitee">
-          <!-- https://gitee.com/wujunshu/netease-cloud-music-improvement -->
           <!-- <a href="javascript:void(0);" target="_blank"> -->
           <a href="javascript:void(0);">
             <i class="icon iconfont icon-github"></i>
